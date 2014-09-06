@@ -10,6 +10,7 @@ namespace Markfee\Responder;
 use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Support\MessageBag;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Database\QueryException;
 
 class Respond {
   private static $status_code  = ResponseCodes::HTTP_OK;
@@ -50,6 +51,21 @@ class Respond {
   public static function NotFound($msg = "Record not found") {
     return Respond::WithError($msg, ResponseCodes::HTTP_NOT_FOUND);
   }
+
+  public static function ReferentialIntegrityError($msg = "Record not found") {
+        return Respond::WithError($msg, ResponseCodes::HTTP_CONFLICT);
+  }
+
+  public static function QueryException(QueryException $e) {
+      switch($e->getCode()) {
+        case 23000:
+              Respond::raiseError("This record can't be deleted as it is referenced by another record");
+              return Respond::ReferentialIntegrityError($e->getMessage());
+    }
+    return Respond::InternalError($e->getMessage());
+  }
+
+
 
   public static function ValidationFailed($msg = "Validation failed - required fields missing.") {
     return Respond::WithError($msg, ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
