@@ -115,9 +115,11 @@ class Respond {
       , "paginator"   => Respond::$paginator
     ],  Respond::getStatusCode(), $headers);
     if ( 'json' != Request::format()) {
-      return Redirect::back()->withMessage(Respond::messages())
-        ->withErrors(Respond::errors())
-        ->withInput();
+      try {
+        return Redirect::back()->withMessage(Respond::messages())
+          ->withErrors(Respond::errors())
+          ->withInput();
+      } catch (Exception $ex) {}
     }
     return $response;
   }
