@@ -114,7 +114,7 @@ class Respond {
       , "status_code" => Respond::getStatusCode()
       , "paginator"   => Respond::$paginator
     ],  Respond::getStatusCode(), $headers);
-    if ( ! Request::ajax()) {
+    if ( 'json' != Request::format()) {
       return Redirect::back()->withMessage(Respond::messages())
         ->withErrors(Respond::errors())
         ->withInput();
