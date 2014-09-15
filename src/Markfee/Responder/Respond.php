@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Support\MessageBag;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\QueryException;
+use \Redirect;
+use \Request;
 
 class Respond {
   private static $status_code  = ResponseCodes::HTTP_OK;
@@ -53,7 +55,7 @@ class Respond {
   }
 
   public static function ReferentialIntegrityError($msg = "Record not found") {
-        return Respond::WithError($msg, ResponseCodes::HTTP_CONFLICT);
+    return Respond::WithError($msg, ResponseCodes::HTTP_CONFLICT);
   }
 
   public static function QueryException(QueryException $e) {
@@ -64,8 +66,6 @@ class Respond {
     }
     return Respond::InternalError($e->getMessage());
   }
-
-
 
   public static function ValidationFailed($msg = "Validation failed - required fields missing.") {
     return Respond::WithError($msg, ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
@@ -107,13 +107,19 @@ class Respond {
   }
 
   public static function respond($headers = []) {
-    return \Response::json([
+    $response = \Response::json([
         "data"        => Respond::$data
       , "errors"      => Respond::errors()->toArray()
       , "messages"    => Respond::messages()->toArray()
       , "status_code" => Respond::getStatusCode()
       , "paginator"   => Respond::$paginator
     ],  Respond::getStatusCode(), $headers);
+    if ( ! Request::ajax()) {
+      return Redirect::back()->withMessage(Respond::messages())
+        ->withErrors(Respond::errors())
+        ->withInput();
+    }
+    return $response;
   }
 
   public static function Raw($data = null, $headers = []) {
