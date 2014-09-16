@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Support\MessageBag;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\QueryException;
-use \Redirect;
 use \Request;
 
 class Respond {
@@ -114,13 +113,6 @@ class Respond {
       , "status_code" => Respond::getStatusCode()
       , "paginator"   => Respond::$paginator
     ],  Respond::getStatusCode(), $headers);
-    if ( 'json' != Request::format()) {
-      try {
-        return Redirect::back()->withMessage(Respond::messages())
-          ->withErrors(Respond::errors())
-          ->withInput();
-      } catch (Exception $ex) {}
-    }
     return $response;
   }
 
