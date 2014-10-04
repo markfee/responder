@@ -38,6 +38,26 @@ abstract class Transformer {
 * @param array $arrayToTransform: [[$array, $name, $identifier], [$subarray, $name, $identifier]]
 */
   public static function transformBy($arrayToTransform) {
+    $final_arr = [];
+    $identifiers = [];
+    foreach($arrayToTransform as $param) {
+      $array              = $param[0];
+      $key                = $param[1];
+      $identifiers[$key]  = $param[2];
+      $final_arr[$key] = [];
+      foreach($array as $record) {
+        $dot_key = "";
+        foreach($identifiers as $identifier_key =>$identifier) {
+          $dot_key .= $identifier_key . "." . $record[$identifier] .".";
+        }
+        $dot_key = trim($dot_key, ".");
+        print "\n" . $dot_key;
+        array_set($final_arr, $dot_key, $record);
+        $final_arr[$key][$record[$identifier]] = $record;
+      }
+    }
+
+    return $final_arr;
 
   }
 
