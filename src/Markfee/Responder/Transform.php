@@ -58,9 +58,7 @@ abstract class Transformer {
         $final_arr[$key][$record[$identifier]] = $record;
       }
     }
-
     return $final_arr;
-
   }
 
 }
