@@ -12,7 +12,8 @@
         "illuminate/support": "4.2.*"
     },
     "autoload": {
-        "psr-0": { "Markfee\\Responder\\": "src/" }
+       "psr-0": { "Markfee\\Responder\\": "src/" }
+
     },
     "minimum-stability": "stable"
 }
