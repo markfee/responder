@@ -34,5 +34,11 @@ abstract class Transformer {
     }
     return $arr;
   }
+/*Transforms an array
+* @param array $arrayToTransform: [[$array, $name, $identifier], [$subarray, $name, $identifier]]
+*/
+  public static function transformBy($arrayToTransform) {
+
+  }
 
 }
