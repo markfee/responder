@@ -47,11 +47,13 @@ abstract class Transformer {
       $final_arr[$key] = [];
       foreach($array as $record) {
         $dot_key = "";
+        if (is_object($record)) {
+          $record = $record->toArray();
+        }
         foreach($identifiers as $identifier_key =>$identifier) {
           $dot_key .= $identifier_key . "." . $record[$identifier] .".";
         }
         $dot_key = trim($dot_key, ".");
-        print "\n" . $dot_key;
         array_set($final_arr, $dot_key, $record);
         $final_arr[$key][$record[$identifier]] = $record;
       }
