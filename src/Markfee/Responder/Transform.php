@@ -48,7 +48,7 @@ abstract class Transformer {
       foreach($array as $record) {
         $dot_key = "";
         if (is_object($record)) {
-          $record = $record->toArray();
+          $record = get_object_vars($record);
         }
         foreach($identifiers as $identifier_key =>$identifier) {
           $dot_key .= $identifier_key . "." . $record[$identifier] .".";
