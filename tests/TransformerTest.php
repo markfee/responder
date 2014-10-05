@@ -57,7 +57,7 @@ class TransformerTest extends TestCase {
       , [$months,   "months", "month"]
 
     ] );
-    print_r($response);
+//    print_r($response);
     $this->assertTrue(is_array($response));
     $this->assertTrue(is_array($response["category"]));
     $this->assertTrue(is_array($response["category"]["UNKNOWN"]));
