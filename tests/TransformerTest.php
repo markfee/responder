@@ -52,7 +52,7 @@ class TransformerTest extends TestCase {
           "month"   => "03"
         ]
       ];
-    $response = Transformer::transformBy( [
+    $response = Transformer::nest( [
         [$top_level, "category", "category_id"]
       , [$months,   "months", "month"]
 

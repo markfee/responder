@@ -37,14 +37,14 @@ abstract class Transformer {
 /*Transforms an array
 * @param array $arrayToTransform: [[$array, $name, $identifier], [$subarray, $name, $identifier]]
 */
-  public static function transformBy($arrayToTransform) {
+  public static function nest($arrayToTransform) {
     $final_arr = [];
     $identifiers = [];
     foreach($arrayToTransform as $param) {
       $array              = $param[0];
       $key                = $param[1];
       $identifiers[$key]  = $param[2];
-      $final_arr[$key] = [];
+//      $final_arr[$key] = [];
       foreach($array as $record) {
         $dot_key = "";
         if (is_object($record)) {
@@ -55,9 +55,9 @@ abstract class Transformer {
         }
         $dot_key = trim($dot_key, ".");
         array_set($final_arr, $dot_key, $record);
-        $final_arr[$key][$record[$identifier]] = $record;
       }
     }
+ //   dd($final_arr);
     return $final_arr;
   }
 
