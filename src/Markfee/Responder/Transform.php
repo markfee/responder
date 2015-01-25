@@ -1,6 +1,7 @@
 <?php namespace Markfee\Responder;
 
-abstract class Transformer {
+
+abstract class Transformer implements TransformerInterface {
 
   public function transformCollection(array $records, $with = []) {
     $arr = [];
