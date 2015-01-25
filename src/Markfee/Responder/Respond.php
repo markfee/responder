@@ -116,6 +116,11 @@ class Respond {
     return $response;
   }
 
+  /**
+   * @param null $data
+   * @param array $headers
+   * @return \Illuminate\Http\JsonResponse
+   */
   public static function Raw($data = null, $headers = []) {
     Respond::setData($data);
     return \Response::json(Respond::$data,  Respond::getStatusCode(), $headers);
@@ -176,5 +181,9 @@ class Respond {
 
   public static function getStatusCode() {
     return Respond::$status_code;
+  }
+
+  public static function hasErred() {
+    return Respond::$status_code >= 400;
   }
 } 
