@@ -1,6 +1,17 @@
 <?php namespace Markfee\Responder;
 
 class Respond {
+
+  private static $responce;
+
+  private static function responce()
+  {
+    if (empty(static::$responce)) {
+      static::$responce = new Response();
+    }
+    return static::$responce;
+  }
+
   private static $status_code  = ResponseCodes::HTTP_OK;
   private static $messages     ;
   private static $errors       ;
@@ -8,11 +19,7 @@ class Respond {
   private static $paginator    ;
 
   public static function Reset() {
-    Respond::$status_code  = ResponseCodes::HTTP_OK;
-    Respond::$messages     = null;
-    Respond::$errors       = null;
-    Respond::$data         = null;
-    Respond::$paginator    = null;
+    static::$responce = new Response();
   }
 
   /**
