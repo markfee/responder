@@ -1,17 +1,4 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: mark
- * Date: 29/05/14
- * Time: 07:43
- */
-
-namespace Markfee\Responder;
-use Symfony\Component\HttpFoundation\Response as ResponseCodes;
-use Illuminate\Support\MessageBag;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Database\QueryException;
-use \Request;
+<?php namespace Markfee\Responder;
 
 class Respond {
   private static $status_code  = ResponseCodes::HTTP_OK;
