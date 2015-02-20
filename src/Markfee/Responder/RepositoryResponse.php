@@ -145,6 +145,12 @@ class RepositoryResponse
         $this->data = $data;
     }
 
+    public function getData()
+    {
+        return $this->data;
+    }
+
+
     public function WithErrors(MessageBag $messageBag)
     {
         $this->errors = $messageBag;
