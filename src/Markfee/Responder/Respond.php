@@ -5,6 +5,10 @@ use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\Paginator;
 
+/**
+ * Class Respond
+ * @package Markfee\Responder
+ */
 class Respond {
 
   private static $responce;
