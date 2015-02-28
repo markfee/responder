@@ -1,5 +1,10 @@
 <?php namespace Markfee\Responder;
 
+use Illuminate\Support\MessageBag;
+use Symfony\Component\HttpFoundation\Response as ResponseCodes;
+use Illuminate\Database\QueryException;
+use Illuminate\Pagination\Paginator;
+
 class Respond {
 
   private static $responce;
