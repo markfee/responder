@@ -90,9 +90,10 @@ class RepositoryResponse {
 
   /**
    * @return bool
+   * NB found is also true when a record has been created, creating an item should also return an instance of the item.
    */
   public function getFoundStatus() {
-    return $this->getStatusCode() == ResponseCodes::HTTP_FOUND;
+    return ($this->getStatusCode() == ResponseCodes::HTTP_FOUND) || $this->getCreatedStatus();
   }
 
 
