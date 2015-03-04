@@ -92,7 +92,7 @@ class RepositoryResponse {
     /**
      * @return bool
      */
-    public function getCreatedStatus() {
+    public function isCreated() {
         return $this->getStatusCode() == ResponseCodes::HTTP_CREATED;
     }
 
@@ -110,18 +110,31 @@ class RepositoryResponse {
 
     /**
      * @return bool
-     * NB found is also true when a record or many records have been deleted.
      */
-    public function getDeletedStatus() {
+    public function isDeleted() {
         return (($this->deletedFlag === true) && $this->getStatusCode() == ResponseCodes::HTTP_OK);
     }
 
     /**
      * @return bool
-     * NB found is also true when a record has been created, creating an item should also return an instance of the item.
      */
-    public function getFoundStatus() {
-        return ($this->getStatusCode() == ResponseCodes::HTTP_FOUND) || $this->getCreatedStatus();
+    public function isConflicted() {
+        return $this->getStatusCode() == ResponseCodes::HTTP_CONFLICT;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFound() {
+        return ($this->getStatusCode() == ResponseCodes::HTTP_FOUND);
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isFoundOrCreated() {
+        return ($this->getStatusCode() == ResponseCodes::HTTP_FOUND) || $this->isCreated();
     }
 
     public function Updated($data = null, $msg = "Updated record successfully.") {
