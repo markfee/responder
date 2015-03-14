@@ -5,7 +5,14 @@ use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\Paginator;
 
-class RepositoryResponse {
+class RepositoryResponse implements RepositoryResponseInterface {
+
+    function __construct(TransformerInterface $transformer) {
+        $this->transformer = $transformer;
+    }
+
+    use TransformableTrait;
+
     private $status_code = ResponseCodes::HTTP_OK;
     private $messages;
     private $errors = null;
@@ -180,9 +187,9 @@ class RepositoryResponse {
         return $this->respond();
     }
 
-    public function Paginated($paginator, array $records) {
+    public function Paginated(Paginator $paginator) {
         $this->setPaginator($paginator);
-        $this->setData($records);
+        $this->setData($this->transformCollection($paginator->all()));
         return $this->respond();
     }
 
@@ -231,4 +238,12 @@ class RepositoryResponse {
     public function hasErred() {
         return $this->status_code >= 400;
     }
-} 
+
+    public function getMessages() {
+        return $this->messages()->toArray();
+    }
+
+    public function getPaginator() {
+        return $this->paginator;
+    }
+}
