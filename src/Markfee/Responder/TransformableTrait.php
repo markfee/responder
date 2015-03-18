@@ -9,7 +9,7 @@ trait TransformableTrait {
    */
   protected $transformer = null;
 
-  private function getTransformer()
+  public function getTransformer()
   {
     return $this->transformer;
   }
@@ -57,7 +57,7 @@ trait TransformableTrait {
    * @return mixed
    */
   protected function transformInput($record) {
-    $transform = $this->getTransformer();
+      $transform = $this->getTransformer();
     return $transform ? $transform->transformInput($record) : $record;
   }
 
