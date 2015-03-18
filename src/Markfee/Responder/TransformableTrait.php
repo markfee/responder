@@ -66,7 +66,7 @@ trait TransformableTrait {
    * @return mixed
    */
   protected function transformCollection($record) {
-    $transform = $this->getTransformer();
+      $transform = $this->getTransformer();
     return $transform ? $transform->transformCollection($record) : $record;
   }
 
