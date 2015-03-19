@@ -19,6 +19,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     private $data;
     private $paginator;
     private $deletedFlag = false;
+    private $updatedFlag = false;
 
     protected function reset() {
         $this->status_code = ResponseCodes::HTTP_OK;
@@ -27,6 +28,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
         $this->data = null;
         $this->paginator = null;
         $this->deletedFlag = false;
+        $this->updatedFlag = false;
     }
 
     /**
@@ -81,13 +83,13 @@ class RepositoryResponse implements RepositoryResponseInterface {
     public function WithError($msg, $statusCode) {
         $this->reset();
         $this->raiseError($msg, $statusCode);
-        return $this->respond();
+        return $this;
     }
 
     public function InternalError($msg = "Internal Server Error") {
         $this->reset();
         $this->raiseError($msg, ResponseCodes::HTTP_INTERNAL_SERVER_ERROR);
-        return $this->respond();
+        return $this;
     }
 
     protected function Created($data = null, $msg = "Successfully created a new record.") {
@@ -125,6 +127,13 @@ class RepositoryResponse implements RepositoryResponseInterface {
     /**
      * @return bool
      */
+    public function isUpdated() {
+        return (($this->updatedFlag === true) && $this->getStatusCode() == ResponseCodes::HTTP_OK);
+    }
+
+    /**
+     * @return bool
+     */
     public function isConflicted() {
         return $this->getStatusCode() == ResponseCodes::HTTP_CONFLICT;
     }
@@ -136,7 +145,6 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return ($this->getStatusCode() == ResponseCodes::HTTP_FOUND);
     }
 
-
     /**
      * @return bool
      */
@@ -146,6 +154,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
 
     public function Updated($data = null, $msg = "Updated record successfully.") {
         $this->reset();
+        $this->updatedFlag = true;
         $this->setData($data);
         return $this->Success($msg, ResponseCodes::HTTP_OK);
     }
@@ -153,10 +162,14 @@ class RepositoryResponse implements RepositoryResponseInterface {
     private function Success($msg = "", $status_code = ResponseCodes::HTTP_OK) {
         $this->setStatusCode($status_code);
         $this->addMessage($msg);
-        return $this->respond();
+        return $this;
     }
 
-    public function respond($headers = []) {
+    /**
+     * @deprecated required for backwards compatibility
+     * @return $this
+     */
+    public function respond() {
         return $this;
     }
 
@@ -184,13 +197,13 @@ class RepositoryResponse implements RepositoryResponseInterface {
 
     public function WithErrors(MessageBag $messageBag) {
         $this->errors = $messageBag;
-        return $this->respond();
+        return $this;
     }
 
     public function Paginated(Paginator $paginator) {
         $this->setPaginator($paginator);
         $this->setData($this->transformCollection($paginator->all()));
-        return $this->respond();
+        return $this;
     }
 
     /**

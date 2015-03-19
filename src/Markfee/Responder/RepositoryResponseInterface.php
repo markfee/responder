@@ -58,7 +58,7 @@ interface RepositoryResponseInterface {
 
     public function Updated($data = null, $msg = "Updated record successfully.");
 
-    public function respond($headers = []);
+    public function respond();
 
     /**
      * @param null $data
