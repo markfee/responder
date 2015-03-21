@@ -4,6 +4,7 @@ use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\Paginator;
+use \Validator;
 
 class RepositoryResponse implements RepositoryResponseInterface {
 
@@ -13,22 +14,24 @@ class RepositoryResponse implements RepositoryResponseInterface {
 
     use TransformableTrait;
 
-    private $status_code = ResponseCodes::HTTP_OK;
+    private $status_code = 0;
     private $messages;
     private $errors = null;
     private $data;
     private $paginator;
+    private $validatedFlag = false;
     private $deletedFlag = false;
     private $updatedFlag = false;
 
     protected function reset() {
-        $this->status_code = ResponseCodes::HTTP_OK;
+        $this->status_code = 0;
         $this->messages = null;
         $this->errors = null;
         $this->data = null;
         $this->paginator = null;
-        $this->deletedFlag = false;
-        $this->updatedFlag = false;
+        $this->validatedFlag    = false;
+        $this->deletedFlag      = false;
+        $this->updatedFlag      = false;
     }
 
     /**
@@ -94,7 +97,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
 
     protected function Created($data = null, $msg = "Successfully created a new record.") {
         $this->reset();
-        $this->setData($data);
+        $this->setData($this->transform($data));
         return $this->Success($msg, ResponseCodes::HTTP_CREATED);
     }
 
@@ -105,9 +108,32 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->getStatusCode() == ResponseCodes::HTTP_CREATED;
     }
 
+    protected function Validate($data, $rules) {
+        $transformed_data = $this->transformInput($data);
+        $validator = Validator::make($transformed_data, $rules);
+        if ($validator->fails()) {
+            return $this->ValidationFailed();
+        }
+        return $this->Validated($transformed_data);
+    }
+
+    private function Validated($data) {
+        $this->reset();
+        $this->validatedFlag = true;
+        $this->setData($data);
+        return $this->Success("", ResponseCodes::HTTP_OK);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid() {
+        return $this->validatedFlag && $this->getStatusCode() == ResponseCodes::HTTP_OK;
+    }
+
     protected function Found($data = null, $msg = "record found.") {
         $this->reset();
-        $this->setData($data);
+        $this->setData($this->transform($data));
         return $this->Success($msg, ResponseCodes::HTTP_OK);
     }
 
@@ -155,7 +181,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     public function Updated($data = null, $msg = "Updated record successfully.") {
         $this->reset();
         $this->updatedFlag = true;
-        $this->setData($data);
+        $this->setData($this->transform($data));
         return $this->Success($msg, ResponseCodes::HTTP_OK);
     }
 
