@@ -108,7 +108,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     protected function Found($data = null, $msg = "record found.") {
         $this->reset();
         $this->setData($data);
-        return $this->Success($msg, ResponseCodes::HTTP_FOUND);
+        return $this->Success($msg, ResponseCodes::HTTP_OK);
     }
 
     protected function Deleted($msg = "successful delete") {
@@ -142,14 +142,14 @@ class RepositoryResponse implements RepositoryResponseInterface {
      * @return bool
      */
     public function isFound() {
-        return ($this->getStatusCode() == ResponseCodes::HTTP_FOUND);
+        return ($this->getStatusCode() == ResponseCodes::HTTP_OK);
     }
 
     /**
      * @return bool
      */
     public function isFoundOrCreated() {
-        return ($this->getStatusCode() == ResponseCodes::HTTP_FOUND) || $this->isCreated();
+        return ($this->getStatusCode() == ResponseCodes::HTTP_OK) || $this->isCreated();
     }
 
     public function Updated($data = null, $msg = "Updated record successfully.") {
