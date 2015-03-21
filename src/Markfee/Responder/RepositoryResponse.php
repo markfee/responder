@@ -229,7 +229,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     public function Paginated(Paginator $paginator) {
         $this->setPaginator($paginator);
         $this->setData($this->transformCollection($paginator->all()));
-        return $this;
+        return $this->Success("", ResponseCodes::HTTP_OK);
     }
 
     /**
