@@ -39,6 +39,11 @@ interface RepositoryResponseInterface {
     /**
      * @return bool
      */
+    public function isMultiple();
+
+    /**
+     * @return bool
+     */
     public function isDeleted();
 
     /**

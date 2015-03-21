@@ -19,6 +19,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     private $errors = null;
     private $data;
     private $paginator;
+    private $multipleFlag = false;
     private $validatedFlag = false;
     private $deletedFlag = false;
     private $updatedFlag = false;
@@ -29,6 +30,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
         $this->errors = null;
         $this->data = null;
         $this->paginator = null;
+        $this->multipleFlag = false;
         $this->validatedFlag    = false;
         $this->deletedFlag      = false;
         $this->updatedFlag      = false;
@@ -101,6 +103,14 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->Success($msg, ResponseCodes::HTTP_CREATED);
     }
 
+    protected function CreatedMultiple($data = null, $msg = "Successfully created a new record.") {
+        $this->reset();
+        $this->multipleFlag = true;
+        $this->setData($this->transform($data));
+        return $this->Success($msg, ResponseCodes::HTTP_CREATED);
+    }
+
+
     /**
      * @return bool
      */
@@ -108,11 +118,17 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->getStatusCode() == ResponseCodes::HTTP_CREATED;
     }
 
+    public function isMultiple() {
+        return $this->multipleFlag;
+    }
+
+
+
     protected function Validate($data, $rules) {
         $transformed_data = $this->transformInput($data);
         $validator = Validator::make($transformed_data, $rules);
         if ($validator->fails()) {
-            return $this->ValidationFailed();
+            return $this->WithErrors($validator->getMessageBag())->ValidationFailed();
         }
         return $this->Validated($transformed_data);
     }
@@ -177,6 +193,14 @@ class RepositoryResponse implements RepositoryResponseInterface {
     public function isFoundOrCreated() {
         return ($this->getStatusCode() == ResponseCodes::HTTP_OK) || $this->isCreated();
     }
+
+    public function BulkUpdated($recordCount, $msg = "Updated multiple records successfully.") {
+        $this->reset();
+        $this->updatedFlag = true;
+        $this->setData($recordCount);
+        return $this->Success($msg, ResponseCodes::HTTP_OK);
+    }
+
 
     public function Updated($data = null, $msg = "Updated record successfully.") {
         $this->reset();
