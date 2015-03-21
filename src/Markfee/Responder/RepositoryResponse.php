@@ -103,6 +103,12 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->Success($msg, ResponseCodes::HTTP_CREATED);
     }
 
+    protected function setCount($count) {
+        $this->reset();
+        $this->setData($count);
+        return $this->Success("", ResponseCodes::HTTP_OK);
+    }
+
     protected function CreatedMultiple($data = null, $msg = "Successfully created a new record.") {
         $this->reset();
         $this->multipleFlag = true;
@@ -230,7 +236,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
      */
     public function Raw($data = null, $headers = []) {
         $this->setData($data);
-        return \Response::json($this->data, $this->getStatusCode(), $headers);
+        return \Response::json($this->data, $this->getStatusCode(200), $headers);
     }
 
     public function setData($data) {
@@ -294,8 +300,8 @@ class RepositoryResponse implements RepositoryResponseInterface {
         $this->status_code = $code;
     }
 
-    public function getStatusCode() {
-        return $this->status_code;
+    public function getStatusCode($default = 0) {
+        return ($this->status_code == 0 ? $default : $this->status_code);
     }
 
     public function hasErred() {
