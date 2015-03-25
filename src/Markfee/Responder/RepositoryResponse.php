@@ -257,6 +257,10 @@ class RepositoryResponse implements RepositoryResponseInterface {
     }
 
     public function Paginated(Paginator $paginator) {
+        if (count($paginator) === 0) {
+            return $this->NotFound("");
+        }
+
         $this->setPaginator($paginator);
         $this->setData($this->transformCollection($paginator->all()));
         return $this->Success("", ResponseCodes::HTTP_OK);
