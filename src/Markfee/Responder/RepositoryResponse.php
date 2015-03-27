@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\Paginator;
 use \Validator;
+use Markfee\Responder\ErrorBagTrait;
 
 class RepositoryResponse implements RepositoryResponseInterface {
 
@@ -13,10 +14,10 @@ class RepositoryResponse implements RepositoryResponseInterface {
     }
 
     use TransformableTrait;
+    use ErrorBagTrait;
 
     private $status_code = 0;
     private $messages;
-    private $errors = null;
     private $data;
     private $paginator;
     private $multipleFlag = false;
@@ -24,26 +25,16 @@ class RepositoryResponse implements RepositoryResponseInterface {
     private $deletedFlag = false;
     private $updatedFlag = false;
 
-    protected function reset() {
-        $this->status_code = 0;
-        $this->messages = null;
-        $this->errors = null;
-        $this->data = null;
-        $this->paginator = null;
-        $this->multipleFlag = false;
+    public function reset() {
+        $this->status_code      = 0;
+        $this->messages         = null;
+        $this->resetErrors();
+        $this->data             = null;
+        $this->paginator        = null;
+        $this->multipleFlag     = false;
         $this->validatedFlag    = false;
         $this->deletedFlag      = false;
         $this->updatedFlag      = false;
-    }
-
-    /**
-     * @return MessageBag
-     */
-    private function errors() {
-        if (empty($this->errors)) {
-            $this->errors = new MessageBag;
-        }
-        return $this->errors;
     }
 
     /**
@@ -128,6 +119,10 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->multipleFlag;
     }
 
+    public function WithErrors(MessageBag $messageBag)
+    {
+        return $this->setErrors($messageBag);
+    }
 
 
     protected function Validate($data, $rules) {
@@ -247,15 +242,6 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->data;
     }
 
-    public function getErrors() {
-        return $this->errors;
-    }
-
-    public function WithErrors(MessageBag $messageBag) {
-        $this->errors = $messageBag;
-        return $this;
-    }
-
     public function Paginated(Paginator $paginator) {
         if (count($paginator) === 0) {
             return $this->NotFound("");
@@ -285,7 +271,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     }
 
     public function raiseError($msg, $statusCode = 0) {
-        $this->errors()->add("error", $msg);
+        $this->addError($msg);
         if ($statusCode > 0) {
             $this->setStatusCode($statusCode);
         }

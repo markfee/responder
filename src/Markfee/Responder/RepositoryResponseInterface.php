@@ -27,8 +27,6 @@ interface RepositoryResponseInterface {
 
     public function NotLoggedIn($msg = "You must be logged in ");
 
-    public function WithError($msg, $statusCode);
-
     public function InternalError($msg = "Internal Server Error");
 
     /**
@@ -76,11 +74,7 @@ interface RepositoryResponseInterface {
 
     public function getData();
 
-    public function getErrors();
-
     public function getMessages();
-
-    public function WithErrors(MessageBag $messageBag);
 
     public function Paginated(Paginator $paginator);
 
@@ -91,9 +85,6 @@ interface RepositoryResponseInterface {
     public function getPaginator();
 
 
-
-    public function raiseError($msg, $statusCode = 0);
-
     /**
      * @param $msg
      */
@@ -103,5 +94,4 @@ interface RepositoryResponseInterface {
 
     public function getStatusCode();
 
-    public function hasErred();
 }
