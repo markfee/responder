@@ -30,30 +30,32 @@ trait ErrorBagTrait {
     }
 
     public function getErrorArray() {
-        return $this->errors->get("error");
+        return $this->errors->all();
     }
 
-    public function setErrors(MessageBag $messageBag)
+    public function setErrors(MessageBag $messageBag, $key = "error")
     {
-        $this->errors = $messageBag;
-        return $this;
+        return $this->addErrors($messageBag, $key);
     }
 
     public function addErrors(MessageBag $messageBag)
     {
-        foreach($messageBag->get("error") as $msg) {
-            $this->addError($msg);
+        foreach($messageBag->getMessages() as $key => $messages) {
+            foreach($messages as $key => $message){
+                $this->addError($message);
+            }
         }
+        return $this;
     }
 
     public function getJsonErrors() {
-        return $this->errors->get("error");
+        return json_encode($this->errors);//->get("error");
     }
 
 
-    public function addError($msg)
+    public function addError($msg, $key="error")
     {
-        $this->errors()->add("error", $msg);
+        $this->errors()->add($key, $msg);
     }
 
     public function hasErrors() {

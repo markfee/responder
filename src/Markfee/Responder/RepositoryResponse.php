@@ -25,10 +25,12 @@ class RepositoryResponse implements RepositoryResponseInterface {
     private $deletedFlag = false;
     private $updatedFlag = false;
 
-    public function reset() {
+    public function reset($resetErrors = true) {
         $this->status_code      = 0;
         $this->messages         = null;
-        $this->resetErrors();
+        if ($resetErrors) {
+            $this->resetErrors();
+        }
         $this->data             = null;
         $this->paginator        = null;
         $this->multipleFlag     = false;
@@ -77,7 +79,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     }
 
     public function WithError($msg, $statusCode) {
-        $this->reset();
+        $this->reset(false);
         $this->raiseError($msg, $statusCode);
         return $this;
     }
@@ -119,14 +121,15 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->multipleFlag;
     }
 
-    public function WithErrors(MessageBag $messageBag)
+    public function WithErrors(MessageBag $messageBag, $key = "error")
     {
-        return $this->setErrors($messageBag);
+        return $this->setErrors($messageBag, $key);
     }
 
 
     protected function Validate($data, $rules) {
         $transformed_data = $this->transformInput($data);
+        /** @var \Illuminate\Validation\Validator $validator */
         $validator = Validator::make($transformed_data, $rules);
         if ($validator->fails()) {
             return $this->WithErrors($validator->getMessageBag())->ValidationFailed();
