@@ -121,6 +121,9 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->multipleFlag;
     }
 
+    /**
+     * @return RepositoryResponse
+     */
     public function WithErrors(MessageBag $messageBag, $key = "error")
     {
         return $this->setErrors($messageBag, $key);
