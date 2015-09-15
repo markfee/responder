@@ -3,7 +3,7 @@
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Response as ResponseCodes;
 use Illuminate\Database\QueryException;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\AbstractPaginator as Paginator;
 use \Validator;
 use Markfee\Responder\ErrorBagTrait;
 use Markfee\Responder\Transformer\TransformerInterface;
@@ -248,10 +248,17 @@ class RepositoryResponse implements RepositoryResponseInterface {
      * @return \Illuminate\Http\JsonResponse
      * returns a Response object for restful requests
      */
-    public function jsonResponse($headers = []) {
-        return \Response::json($this->getData(), $this->getStatusCode(200), $headers);
+    public function jsonResponse($headers = []) 
+    {
+        $response = \Response::json([
+             "data"         => $this->getData()
+            , "errors"      => $this->getErrors()
+            , "messages"    => $this->getMessages()
+            , "status_code" => $this->getStatusCode()
+            , "paginator"   => $this->getPaginator()
+        ],  $this->getStatusCode(), $headers);
+        return $response;
     }
-
 
     public function setData($data) {
         $this->data = $data;
@@ -262,6 +269,7 @@ class RepositoryResponse implements RepositoryResponseInterface {
     }
 
     public function Paginated(Paginator $paginator) {
+
         if (count($paginator) === 0) {
             return $this->NotFound("");
         }
@@ -275,18 +283,19 @@ class RepositoryResponse implements RepositoryResponseInterface {
      * @param Paginator $paginator
      */
     public function setPaginator(Paginator $paginator) {
-        $next = $paginator->getLastPage() > $paginator->getCurrentPage() ? $paginator->getCurrentPage() + 1 : null;
-        $previous = $paginator->getCurrentPage() > 1 ? $paginator->getCurrentPage() - 1 : null;
+        $next = $paginator->lastPage() > $paginator->currentPage() ? $paginator->currentPage() + 1 : null;
+        $previous = $paginator->currentPage() > 1 ? $paginator->currentPage() - 1 : null;
         $this->paginator = [
-            'total' => $paginator->getTotal(),
-            'per_page' => $paginator->getPerPage(),
-            'current_page' => $paginator->getCurrentPage(),
-            'last_page' => $paginator->getLastPage(),
-            'from' => $paginator->getFrom(),
-            'to' => $paginator->getTo(),
+            'total' => $paginator->total(),
+            'per_page' => $paginator->perPage(),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'from' => $paginator->firstItem(),
+            'to' => $paginator->lastItem(),
             'next' => $next,
             'previous' => $previous,
         ];
+        return $this;
     }
 
     public function raiseError($msg, $statusCode = 0) {

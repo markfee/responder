@@ -1,7 +1,7 @@
 <?php namespace Markfee\Responder\Repository;
 
 use Illuminate\Database\QueryException;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\AbstractPaginator as Paginator;
 use Illuminate\Support\MessageBag;
 
 interface RepositoryResponseInterface {
