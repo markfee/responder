@@ -6,6 +6,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Pagination\Paginator;
 use \Validator;
 use Markfee\Responder\ErrorBagTrait;
+use Markfee\Responder\Transformer\TransformerInterface;
+use Markfee\Responder\Transformer\TransformableTrait;
 
 class RepositoryResponse implements RepositoryResponseInterface {
 
@@ -239,6 +241,17 @@ class RepositoryResponse implements RepositoryResponseInterface {
         $this->setData($data);
         return \Response::json($this->data, $this->getStatusCode(200), $headers);
     }
+
+    /**
+     * @param null $data
+     * @param array $headers
+     * @return \Illuminate\Http\JsonResponse
+     * returns a Response object for restful requests
+     */
+    public function jsonResponse($headers = []) {
+        return \Response::json($this->getData(), $this->getStatusCode(200), $headers);
+    }
+
 
     public function setData($data) {
         $this->data = $data;
