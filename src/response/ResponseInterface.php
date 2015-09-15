@@ -11,7 +11,7 @@ interface ResponseInterface {
   public function addMessageBag(MessageBag $messageBag);
   /** @param Paginator $paginator   */
   public function setPaginator(Paginator $paginator);
-public function raiseError($msg, $statusCode = 0);
+  public function raiseError($msg, $statusCode = 0);
 
   /** @param $msg   */
   public function addMessage($msg);
