@@ -1,10 +1,4 @@
-<?php namespace Markfee\Responder;
-/**
- * Created by PhpStorm.
- * User: mark
- * Date: 25/01/15
- * Time: 12:06
- */
+<?php namespace Markfee\Responder\Transformer;
 
 interface TransformerInterface {
 

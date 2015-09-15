@@ -18,7 +18,6 @@ class ResponderServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('markfee/responder');
 	}
 
 	/**
@@ -28,11 +27,7 @@ class ResponderServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-    $this->app['responder'] = $this->app->share(function($app)
-    {
-      return new Respond;
-    });
-  }
+  	}
 
 	/**
 	 * Get the services provided by the provider.

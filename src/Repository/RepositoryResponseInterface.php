@@ -1,11 +1,4 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: mark
- * Date: 14/03/15
- * Time: 07:13
- */
-namespace Markfee\Responder;
+<?php namespace Markfee\Responder\Repository;
 
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\Paginator;

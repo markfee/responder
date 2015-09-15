@@ -1,4 +1,4 @@
-<?php namespace Markfee\Responder;
+<?php namespace Markfee\Responder\Response;
 
 use \Illuminate\Support\MessageBag;
 

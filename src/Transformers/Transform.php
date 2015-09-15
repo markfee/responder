@@ -1,5 +1,4 @@
-<?php namespace Markfee\Responder;
-
+<?php namespace Markfee\Responder\Transformer;
 
 class Transformer implements TransformerInterface {
 

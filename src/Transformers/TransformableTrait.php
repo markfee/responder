@@ -1,4 +1,4 @@
-<?php namespace Markfee\Responder;
+<?php namespace Markfee\Responder\Transformer;
 
 use Markfee\Responder\Transformer;
 use \Illuminate\Pagination\Paginator;

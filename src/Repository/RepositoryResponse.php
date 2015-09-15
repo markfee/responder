@@ -1,4 +1,4 @@
-<?php namespace Markfee\Responder;
+<?php namespace Markfee\Responder\Repository;
 
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\Response as ResponseCodes;
