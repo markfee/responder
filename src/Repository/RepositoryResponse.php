@@ -248,8 +248,16 @@ class RepositoryResponse implements RepositoryResponseInterface {
      * @return \Illuminate\Http\JsonResponse
      * returns a Response object for restful requests
      */
-    public function jsonResponse($headers = []) {
-        return \Response::json($this->getData(), $this->getStatusCode(200), $headers);
+    public function jsonResponse($headers = []) 
+    {
+        $response = \Response::json([
+             "data"         => $this->getData()
+            , "errors"      => $this->getErrors()
+            , "messages"    => $this->getMessages()
+            , "status_code" => $this->getStatusCode()
+            , "paginator"   => $this->getPaginator()
+        ],  $this->getStatusCode(), $headers);
+        return $response;
     }
 
 
