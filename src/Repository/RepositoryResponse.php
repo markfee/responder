@@ -27,6 +27,44 @@ class RepositoryResponse implements RepositoryResponseInterface {
     private $deletedFlag = false;
     private $updatedFlag = false;
 
+    // Pagination
+    protected $records_per_page = 500;
+    protected $fields = ["*"];
+    protected $page_number = 1;
+    private $eloquentModel  = null;
+    private $paginatedModel = null;
+
+    public function PageNumber($page)
+    {
+        $this->page_number = (int) $page;
+        return $this;
+    }
+    public function PageSize($pageSize)
+    {
+        $this->records_per_page = (int) $pageSize;
+        return $this;
+    }
+  
+    protected function PaginateModel($eloquentModel)
+    {
+        $this->eloquentModel = $eloquentModel;
+        print "\ngettingPage {$this->page_number}";
+        $this->paginatedModel = $this->eloquentModel->paginate($this->records_per_page, $this->fields, 'page', $this->page_number);
+        return $this->Paginated($this->paginatedModel);
+    }
+
+    public function NextPage() 
+    {
+        if (empty($this->eloquentModel) || empty($this->paginatedModel)) {
+            throw new \Exception("RepositoryResponse: NextPage called without using PaginateModel");
+        }
+        if ($this->paginatedModel->hasMorePages()) {
+            $this->page_number++;
+            return $this->PaginateModel($this->eloquentModel);
+        }
+        return $this->NotFound("");
+    }
+
     public function reset($resetErrors = true) {
         $this->status_code      = 0;
         $this->messages         = null;
