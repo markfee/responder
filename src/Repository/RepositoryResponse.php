@@ -65,6 +65,19 @@ class RepositoryResponse implements RepositoryResponseInterface {
         return $this->NotFound("");
     }
 
+    protected function apply_query_filters()
+    {
+
+    }
+
+    public function WithQueryParameters($parameter_array)
+    {
+        \Input::merge($parameter_array);
+        $this->apply_query_filters();
+        return $this;
+    }
+
+
     public function reset($resetErrors = true) {
         $this->status_code      = 0;
         $this->messages         = null;
