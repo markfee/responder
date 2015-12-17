@@ -67,13 +67,11 @@ class RepositoryResponse implements RepositoryResponseInterface {
 
     protected function apply_query_filters()
     {
-
     }
 
     public function WithQueryParameters($parameter_array)
     {
         \Input::merge($parameter_array);
-        $this->apply_query_filters();
         return $this;
     }
 
