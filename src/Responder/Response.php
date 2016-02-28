@@ -46,4 +46,38 @@ class Response {
         return $this->data;
     }
 
+    public function getErrors() {
+        return $this->errors;
+    }
+
+    public function getMessages() {
+        return $this->messages;
+    }
+
+    public function getStatusCode() {
+        return $this->status_code;
+    }
+
+    public function getPaginator() {
+        return $this->paginator;
+    }
+
+    /**
+     * @param null $data
+     * @param array $headers
+     * @return \Illuminate\Http\JsonResponse
+     * returns a Response object for restful requests
+     */
+    public function jsonResponse($headers = []) 
+    {
+        $response = \Response::json([
+             "data"         => $this->getData()
+            , "errors"      => $this->getErrors()
+            , "messages"    => $this->getMessages()
+            , "status_code" => $this->getStatusCode()
+            , "paginator"   => $this->getPaginator()
+        ],  $this->getStatusCode(), $headers);
+        return $response;
+    }
+
 }
