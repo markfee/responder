@@ -12,12 +12,12 @@ use Illuminate\Support\MessageBag;
 interface ResponderInterface {
 
     /**
-     * @return ResponderInterface
+     * @return Response
      */
     public function Found($data = null, $msg = "Record found");
 
     /**
-     * @return ResponderInterface
+     * @return Response
      */
     public function NotFound($msg = "Record not found");
 

@@ -21,7 +21,8 @@ class Response {
     public function __construct() {
         $this->status_code      = 0;
         $this->data             = null;
-        $this->paginator        = null;
+        $this->paginator        = [];
+        
         $this->multipleFlag     = false;
         $this->validatedFlag    = false;
         $this->deletedFlag      = false;
@@ -54,7 +55,14 @@ class Response {
     {
         $this->MessageSet()->add("messages", $msg);
         return $this;
-    }    
+    } 
+
+    /** @return Response */
+    public function withPaginator($paginatorArray) 
+    {
+        $this->paginator = $paginatorArray;
+        return $this;
+    } 
 
     /** @return Array */
     public function getData() {
@@ -75,6 +83,7 @@ class Response {
             [ "data"        => $this->getData()
             , "status_code" => $this->getStatusCode()]
             , $this->getMessageSet()
+            , $this->getPaginator()
 //            , "paginator"   => $this->getPaginator()
         );
     }
@@ -86,6 +95,7 @@ class Response {
      * returns a Response object for restful requests
      */
     public function jsonResponse($headers = []) 
+
     {
         return \Response::json($this->toArray(), $this->getStatusCode(), $headers);
         return \Response::json([
