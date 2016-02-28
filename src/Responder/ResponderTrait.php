@@ -15,17 +15,22 @@ trait ResponderTrait {
     /**
      * @return ResponderInterface
      */
-    protected function Found($data = null, $msg = "record found.") {
-    	return (new Response())
-    		->withData($this->transform($data))
-    		->withStatusCode(ResponseCodes::HTTP_OK);
+    protected function Found($data = null, $msg = null) 
+    {
+        return (new Response())
+            ->withMessage($msg)
+            ->withData($this->transform($data))
+            ->withStatusCode(ResponseCodes::HTTP_OK);
     }
 
     /**
      * @return ResponderInterface
      */
-    public function NotFound($msg = "Record not found") {
-    	dd("Not Found");
+    public function NotFound($msg = "Record not found") 
+    {
+        return (new Response())
+            ->withError($msg)
+            ->withStatusCode(ResponseCodes::HTTP_NOT_FOUND);
     }
 
 }

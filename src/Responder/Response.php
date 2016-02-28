@@ -5,11 +5,14 @@
  */
 
 class Response {
+
+    use MessageSetTrait;
+
     private $status_code = 0;
-    private $messages;
     private $data;
+
     private $paginator;
-    private $errors;
+
     private $multipleFlag = false;
     private $validatedFlag = false;
     private $deletedFlag = false;
@@ -17,8 +20,6 @@ class Response {
 
     public function __construct() {
         $this->status_code      = 0;
-        $this->messages         = null;
-        $this->errors           = null;
         $this->data             = null;
         $this->paginator        = null;
         $this->multipleFlag     = false;
@@ -41,17 +42,23 @@ class Response {
         return $this;
     }
 
+    /** @return Response */
+    public function withError($msg) 
+    {
+        $this->MessageSet()->add("errors", $msg);
+        return $this;
+    }    
+
+    /** @return Response */
+    public function withMessage($msg) 
+    {
+        $this->MessageSet()->add("messages", $msg);
+        return $this;
+    }    
+
     /** @return Array */
     public function getData() {
         return $this->data;
-    }
-
-    public function getErrors() {
-        return $this->errors;
-    }
-
-    public function getMessages() {
-        return $this->messages;
     }
 
     public function getStatusCode() {
@@ -62,6 +69,16 @@ class Response {
         return $this->paginator;
     }
 
+    private function toArray()
+    {
+        return array_merge(
+            [ "data"        => $this->getData()
+            , "status_code" => $this->getStatusCode()]
+            , $this->getMessageSet()
+//            , "paginator"   => $this->getPaginator()
+        );
+    }
+
     /**
      * @param null $data
      * @param array $headers
@@ -70,14 +87,13 @@ class Response {
      */
     public function jsonResponse($headers = []) 
     {
-        $response = \Response::json([
-             "data"         => $this->getData()
+        return \Response::json($this->toArray(), $this->getStatusCode(), $headers);
+        return \Response::json([
+              "data"        => $this->getData()
             , "errors"      => $this->getErrors()
             , "messages"    => $this->getMessages()
             , "status_code" => $this->getStatusCode()
             , "paginator"   => $this->getPaginator()
         ],  $this->getStatusCode(), $headers);
-        return $response;
     }
-
 }
