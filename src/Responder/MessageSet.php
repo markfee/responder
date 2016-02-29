@@ -6,7 +6,12 @@ class MessageSet {
     public function add($key, $message)
     {
     	if (!empty($message)) {
-    		$this->message_sets[$key][] = $message;	
+            $this->message_sets[$key] = empty($this->message_sets[$key]) ? [] : $this->message_sets[$key];
+            if (is_array($message)) {
+                $this->message_sets[$key] = array_merge($this->message_sets[$key], $message);
+            } else {
+                $this->message_sets[$key][] = $message;     
+            }
     	}
     }
 

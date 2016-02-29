@@ -10,7 +10,6 @@ class Response {
 
     private $status_code = 0;
     private $data;
-
     private $paginator;
 
     private $multipleFlag = false;
@@ -84,7 +83,6 @@ class Response {
             , "status_code" => $this->getStatusCode()]
             , $this->getMessageSet()
             , $this->getPaginator()
-//            , "paginator"   => $this->getPaginator()
         );
     }
 
@@ -95,15 +93,9 @@ class Response {
      * returns a Response object for restful requests
      */
     public function jsonResponse($headers = []) 
-
     {
-        return \Response::json($this->toArray(), $this->getStatusCode(), $headers);
-        return \Response::json([
-              "data"        => $this->getData()
-            , "errors"      => $this->getErrors()
-            , "messages"    => $this->getMessages()
-            , "status_code" => $this->getStatusCode()
-            , "paginator"   => $this->getPaginator()
-        ],  $this->getStatusCode(), $headers);
+        return \Response::json($this->toArray()
+            , $this->getStatusCode()
+            , $headers);
     }
 }
