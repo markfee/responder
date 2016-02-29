@@ -52,6 +52,47 @@ trait ResponderTrait {
             ->withStatusCode(ResponseCodes::HTTP_CREATED);
     }
 
+    /**
+     * @return Response
+     */
+    protected function WithError($msg, $statusCode) {
+        return (new Response())
+            ->withError($msg)
+            ->withStatusCode($statusCode);
+    }
+
+    /**
+     * @return Response
+     */
+    public function ReferentialIntegrityError($msg = null) {
+        return $this->WithError($msg, ResponseCodes::HTTP_CONFLICT);
+    }
+
+    /**
+     * @return Response
+     */
+    public function ValidationFailed($msg = null) 
+    {
+        return (new Response())
+            ->withError($msg)
+            ->withStatusCode(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @return Response
+     */
+    public function NotAuthorised($msg = "Forbidden request") {
+        return $this->WithError($msg, ResponseCodes::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @return Response
+     */
+    public function NotLoggedIn($msg = "You must be logged in ") {
+        return $this->WithError($msg, ResponseCodes::HTTP_UNAUTHORIZED);
+    }
+
+
     public function TransformAndValidate($data, $rules, $success_callback, $fail_callback = null)
     {
         $transformed_data = $this->transformInput($data);
@@ -59,9 +100,7 @@ trait ResponderTrait {
         $validator = \Validator::make($transformed_data, $rules);
         if ($validator->fails()) {
             return $fail_callback ? $fail_callback($validator)
-                : (new Response())
-                ->withError($validator->getMessageBag()->all())
-                ->withStatusCode(ResponseCodes::HTTP_UNPROCESSABLE_ENTITY);
+                : $this->ValidationFailed($validator->getMessageBag()->all());
         }
         try {
             return $success_callback($transformed_data);    
@@ -69,9 +108,8 @@ trait ResponderTrait {
             return (new Response())
                 ->withError("The record failed to save")
                 ->withStatusCode(ResponseCodes::HTTP_INTERNAL_SERVER_ERROR);
-            // TODO Log This.                
+            // TODO inject a Logger to Log This.                
         }
-        
     }
 
 }
