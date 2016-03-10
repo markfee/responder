@@ -79,8 +79,7 @@ class Response {
     private function toArray()
     {
         return array_merge(
-            [ "data"        => $this->getData()
-            , "status_code" => $this->getStatusCode()]
+            [ "data"        => $this->getData() ]
             , $this->getMessageSet()
             , $this->getPaginator()
         );
