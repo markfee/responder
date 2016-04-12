@@ -55,6 +55,22 @@ trait ResponderTrait {
     /**
      * @return Response
      */
+    protected function Deleted($msg = "successful delete") {
+        return $this->Found(null, $msg, ResponseCodes::HTTP_OK);
+    }
+
+    /**
+     * @return Response
+     */
+    public function Updated($data = null, $msg = "Updated record successfully.") {
+        return $this->Found($data, $msg, ResponseCodes::HTTP_OK);
+    }
+
+
+
+    /**
+     * @return Response
+     */
     protected function WithError($msg, $statusCode) {
         return (new Response())
             ->withError($msg)
