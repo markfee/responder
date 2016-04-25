@@ -53,6 +53,7 @@ and add the dependency on markfee/responder
     -use Markfee\Responder\Transformer\Transformer;
     -
     -class PeopleTransformer extends Transformer {
+    // The transform function is no longer static
     -    public static function transform($record) {
     -//        return $record;
     +class PeopleTransformer extends \Responder\Transformer {
