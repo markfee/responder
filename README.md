@@ -25,14 +25,12 @@ and add the dependency on markfee/responder
         Markfee\Responder\ResponderServiceProvider::class,
   ```
 
-
-== To convert from pre version 6 of the responder
+## To convert from pre version 6 of the responder
 
   ``` php
   	// Remove all paths like this from the namespace includes.
   	-use Markfee\Responder\Repository\RepositoryResponse;
 	-use Markfee\Responder\Transformer\TransformerInterface;
-
 	
 	//Remove extends RepositoryResponse
 	-class PeopleCollection extends RepositoryResponse {
@@ -40,7 +38,6 @@ and add the dependency on markfee/responder
 
 	// Add in the following trait (this replaces the inherited members of the deprecated RepositoryResponse)
 +    use \Responder\ResponderTrait;
-
 
 	// Remove TransformerInterface $transformer from the constructor of your class
 	// (you can still pass in a transformer, but you will have to call setTransformer in your constructor)
@@ -50,3 +47,14 @@ and add the dependency on markfee/responder
 +    function __construct($transformer) {
 -        parent::__construct($transformer);
 +        $this->setTransformer($transformer);
+  ```
+## In your transformers:
+  ```
+    -use Markfee\Responder\Transformer\Transformer;
+    -
+    -class PeopleTransformer extends Transformer {
+    -    public static function transform($record) {
+    -//        return $record;
+    +class PeopleTransformer extends \Responder\Transformer {
+    +    public function transform($record) {
+  ```
