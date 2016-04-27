@@ -8,9 +8,9 @@ trait MessageSetTrait {
 		return $this->MessageSet()->get($key);
 	}
 
-	protected function MessageSet()
+	protected function MessageSet($message_sets = [])
 	{
-		return $this->message_set ?: $this->message_set = new MessageSet;
+		return $this->message_set ?: $this->message_set = new MessageSet($message_sets);
 	}
 
 }

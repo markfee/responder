@@ -25,6 +25,7 @@ class ResponderServiceProvider extends ServiceProvider {
         AliasLoader::getInstance()->alias('Responder\ResponderInterface',   '\Markfee\Responder\Responder\ResponderInterface');
         AliasLoader::getInstance()->alias('Responder\Transformer',          '\Markfee\Responder\Responder\Transformer');
         AliasLoader::getInstance()->alias('Responder\Response',             '\Markfee\Responder\Responder\Response');
+        AliasLoader::getInstance()->alias('Responder\ApiResponse',          '\Markfee\Responder\Responder\ApiResponse');
     }
 
     /**

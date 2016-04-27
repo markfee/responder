@@ -3,6 +3,11 @@
 class MessageSet {
 	private $message_sets = [];
 
+    public function __construct($message_sets = [])
+    {
+        $this->message_sets = $message_sets;
+    }
+
     public function add($key, $message)
     {
     	if (!empty($message)) {
