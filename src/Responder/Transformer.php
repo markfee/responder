@@ -12,7 +12,7 @@ class Transformer implements TransformerInterface {
   		return $record;  
   	}
 
-	public function transformCollection(array $records) {
+	public function transformCollection($records) {
     	$arr = [];
 	    foreach($records as $record) {
     		$arr[] = $this->transform($record);
