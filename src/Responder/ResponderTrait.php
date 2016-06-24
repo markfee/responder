@@ -128,4 +128,10 @@ trait ResponderTrait {
         }
     }
 
+    public function WithQueryParameters($parameter_array)
+    {
+        \Input::merge($parameter_array);
+        return $this;
+    }    
+
 }
