@@ -15,14 +15,20 @@ class ApiResponse extends Response {
         if (!empty($decoded->data)) {
             $this->withData($decoded->data);    
         }
+        $messages = [];
         if (!empty($decoded->messages)) {
-            $this->MessageSet($decoded->messages);
+            $messages["messages"] = $decoded->messages;
         }
+        if (!empty($decoded->errors)) {
+            $messages["errors"] = $decoded->errors;
+        }     
+        $this->MessageSet($messages);    
+        
         if (!empty($decoded->paginator)) {
             $this->withPaginator($decoded->paginator);
         }
-        
-    }
+    }       
+    
 
     private function readResponseBodyToObject($response)
     {
