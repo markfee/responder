@@ -76,6 +76,16 @@ class Response {
         return $this->paginator;
     }
 
+    public function getMessages() 
+    {
+        return $this->getMessageSet("messages");
+    }
+
+    public function getErrors() 
+    {
+        return $this->getMessageSet("errors");
+    }
+
     private function toArray()
     {
         return array_merge(
