@@ -22,9 +22,9 @@ class MessageSet {
 
     public function get($key = null)
     {
-        if(!array_key_exists($key, $this->message_sets)){
+        if(!is_null($key) AND !array_key_exists($key, $this->message_sets)){
             return [];
-        }    
+        }
     
     	return $key ? $this->message_sets[$key] : $this->message_sets;
     }
