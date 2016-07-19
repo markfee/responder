@@ -134,4 +134,34 @@ trait ResponderTrait {
         return $this;
     }    
 
+    /**
+     * @param null $data
+     * @param string $filename
+     * @param string $sheetname
+     * @return a downloaded excel document
+     */
+    public function Spreadsheet($data, $filename="spreadsheet", $sheetname="sheet1") 
+    {
+        $excel = \App::make('excel');
+        return $excel->create($filename, 
+            function($excel) use ($data, $sheetname) 
+            {
+                $excel->sheet($sheetname, 
+                    function($sheet) use ($data)
+                    {
+                        $row_number = 1;
+                        foreach($data as $row_data) {
+                            // Add a header Row For the First Row.
+                            if ($row_number == 1) {
+                                $sheet->row($row_number++, 
+                                array_keys($this->transform($row_data)));
+                            }
+                            // Add a Row for each row of data.
+                            $sheet->row($row_number++, $this->transform($row_data));    
+                        }
+                    }
+                );
+            }
+        )->download('xls');
+    }    
 }
