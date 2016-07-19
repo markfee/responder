@@ -66,13 +66,19 @@ trait PaginatorTrait {
             ->withStatusCode(ResponseCodes::HTTP_OK);
     }    
 
+    private $force_empty_paginator = false;
+    public function AlwaysPaginated($model, $not_found_message = "")
+    {
+        $this->force_empty_paginator = true;
+        return $this->Paginated($model, $not_found_message);
+    }
+
     /** 
      *  @return Array
      */
     private function PaginatorToArray(Paginator $paginator) 
     {
-        // TODO - Check if we agree to return no paginator if the data count is smaller than the page size
-        if (count($paginator) >= $paginator->total()) {
+        if (!$this->force_empty_paginator && count($paginator) >= $paginator->total()) {
             return [];
         }
 
