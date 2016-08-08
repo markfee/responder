@@ -108,12 +108,21 @@ trait ResponderTrait {
         return $this->WithError($msg, ResponseCodes::HTTP_UNAUTHORIZED);
     }
 
+    private $custom_validation_messages = [];
+
+    public function TransformAndValidateModel($data, $model, $success_callback, $fail_callback = null)
+    {
+        $rules = empty($model->rules) ? [] : $model->rules;
+        $this->custom_validation_messages = empty($model->validation_messages) ? [] : $model->validation_messages;
+
+        return $this->TransformAndValidate($data, $rules, $success_callback);
+    }
 
     public function TransformAndValidate($data, $rules, $success_callback, $fail_callback = null)
     {
         $transformed_data = $this->transformInput($data);
         /** @var \Illuminate\Validation\Validator $validator */
-        $validator = \Validator::make($transformed_data, $rules);
+        $validator = \Validator::make($transformed_data, $rules, $this->custom_validation_messages);
         if ($validator->fails()) {
             return $fail_callback ? $fail_callback($validator)
                 : $this->ValidationFailed($validator->getMessageBag()->all());
@@ -121,10 +130,10 @@ trait ResponderTrait {
         try {
             return $success_callback($transformed_data);    
         } catch (\Exception $ex) {
+            \Log::error($ex->getMessage());
             return (new Response())
                 ->withError("The record failed to save")
                 ->withStatusCode(ResponseCodes::HTTP_INTERNAL_SERVER_ERROR);
-            // TODO inject a Logger to Log This.                
         }
     }
 
